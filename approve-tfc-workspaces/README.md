@@ -1,0 +1,1 @@
+This function automates large-scale infrastructure updates consisting of dozens of terraform cloud workspaces. It approves them filtering on certain prefix.

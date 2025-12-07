@@ -1,3 +1,4 @@
+# Quick deployment I like to use for troubleshooting k8s clusters
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -15,7 +16,7 @@ spec:
         app: k8s-troubleshoot
         azure.workload.identity/use: "true"
     spec:
-      serviceAccountName: service-account
+      serviceAccountName: foobar-service-account
       containers:
         - name: k8s-troubleshoot
           image: mcr.microsoft.com/azure-cli:latest

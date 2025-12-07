@@ -1,0 +1,49 @@
+# Mount istio root ca secret (the one created by default), convert it to pfx format and import to Azure KeyVault
+# Use Workload Identity to associate service account with Azure Managed Identity
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: import-istio-root-ca
+  namespace: istio-system
+  annotations:
+    azure.workload.identity/client-id: <redacted>
+    azure.workload.identity/tenant-id: <redacted>
+  labels: 
+    azure.workload.identity/use: "true"
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: import-istio-root-ca
+  namespace: istio-system
+spec:
+  template:
+    metadata:
+      labels: 
+        azure.workload.identity/use: "true"
+    spec:
+      serviceAccountName: import-istio-root-ca
+      containers:
+        - name: importer
+          image: mcr.microsoft.com/azure-cli:latest
+          command: ["/bin/bash", "-c"]
+          args:
+            - |
+              openssl pkcs12 -export -in /etc/istio-ca/ca-cert.pem -inkey /etc/istio-ca/ca-key.pem -out istio-ca-secret.pfx -passout pass:
+              az login --federated-token "$(cat $AZURE_FEDERATED_TOKEN_FILE)" --service-principal -u $AZURE_CLIENT_ID -t $AZURE_TENANT_ID
+              az keyvault certificate import --vault-name $AZURE_KEYVAULT_NAME -n $ISTIO_CA_SECRET_NAME -f istio-ca-secret.pfx
+          env:
+            - name: AZURE_KEYVAULT_NAME
+              value: "{{metadata.labels.istio_ca_keyvault_name}}"
+            - name: ISTIO_CA_SECRET_NAME
+              value: "{{metadata.labels.istio_ca_secret_name}}"
+          volumeMounts:
+            - name: istio-ca-secret
+              mountPath: /etc/istio-ca
+              readOnly: true
+      restartPolicy: Never
+      volumes:
+        - name: istio-ca-secret
+          secret:
+            secretName: istio-ca-secret
+  backoffLimit: 2

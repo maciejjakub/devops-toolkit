@@ -20,4 +20,6 @@ spec:
       containers:
         - name: k8s-troubleshoot
           image: mcr.microsoft.com/azure-cli:latest
+          # image: curlimages/curl:latest
+          # image: mcr.microsoft.com/dotnet/sdk:10.0
           command: ["sleep", "infinity"]

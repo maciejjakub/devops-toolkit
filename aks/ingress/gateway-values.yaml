@@ -1,0 +1,8 @@
+name: gateway
+autoscaling:
+  minReplicas: 1
+service:
+  enabled: "true"
+  annotations:
+    service.beta.kubernetes.io/azure-pip-name: static-ip
+    service.beta.kubernetes.io/azure-load-balancer-resource-group: MC_kml_rg_main-9fe5180a251042c7_lab-aks_eastus

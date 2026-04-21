@@ -1,7 +1,7 @@
 data "azurerm_resource_group" "main" {
   # kodekloud creates new resource group with random name for each lab, 
   # remember to update it after each lab reset before running terraform apply
-  name = "kml_rg_main-9fe5180a251042c7"
+  name = "kml_rg_main-61db4bba35b5474c"
 }
 
 resource "azurerm_kubernetes_cluster" "main" {
@@ -17,6 +17,12 @@ resource "azurerm_kubernetes_cluster" "main" {
     node_count     = 1
     vm_size        = "Standard_D2s_v3"
     vnet_subnet_id = azurerm_subnet.main.id
+
+    upgrade_settings {
+      drain_timeout_in_minutes      = 0
+      max_surge                     = "10%"
+      node_soak_duration_in_minutes = 0
+    }
   }
 
   identity {

@@ -12,10 +12,6 @@ terraform {
       source  = "hashicorp/kubernetes"
       version = "~> 2.24.0"
     }
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "~> 4.0"
-    }
   }
 }
 

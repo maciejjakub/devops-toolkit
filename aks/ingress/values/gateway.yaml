@@ -1,0 +1,7 @@
+name: gateway
+labels:
+  istio: gateway
+autoscaling:
+  minReplicas: 1
+service:
+  enabled: "true"

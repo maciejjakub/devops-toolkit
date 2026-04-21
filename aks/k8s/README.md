@@ -21,4 +21,6 @@ helm install --create-namespace --namespace hello-kubernetes hello-world .
 kubectl get svc hello-kubernetes-hello-world -n hello-kubernetes -o 'jsonpath={ .status.loadBalancer.ingress[0].ip }'
 ```
 
+
+
 to do: set up an ingress controller to allow multiple services be hosted on a single public ip

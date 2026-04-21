@@ -19,7 +19,7 @@ resource "helm_release" "istiod" {
   depends_on = [helm_release.istio_base]
 
   values = [
-    file("${path.module}/values.yaml")
+    file("${path.module}/values/istiod.yaml")
   ]
 }
 
@@ -35,6 +35,33 @@ resource "helm_release" "istio_ingress" {
   create_namespace = true
 
   values = [
-    file("${path.module}/gateway-values.yaml")
+    file("${path.module}/values/gateway.yaml")
   ]
+}
+
+resource "kubernetes_manifest" "istio_gateway" {
+  depends_on = [helm_release.istio_ingress]
+  manifest = {
+    apiVersion = "networking.istio.io/v1beta1"
+    kind       = "Gateway"
+    metadata = {
+      name      = "fileserver-gateway"
+      namespace = "ingress"
+    }
+    spec = {
+      selector = {
+        istio = "gateway"
+      }
+      servers = [
+        {
+          port = {
+            number   = 80
+            name     = "http"
+            protocol = "HTTP"
+          }
+          hosts = ["*"]
+        }
+      ]
+    }
+  }
 }

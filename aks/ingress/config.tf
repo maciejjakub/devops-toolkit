@@ -1,5 +1,5 @@
 locals {
-  istio_version = "1.29.2"  # latest GA in April 2026
+  istio_version = "1.29.2" # latest GA in April 2026
 }
 
 terraform {
@@ -17,12 +17,12 @@ terraform {
 
 provider "helm" {
   kubernetes {
-    config_path = "~/.kube/config"
+    config_path    = "~/.kube/config"
     config_context = "lab-aks"
   }
 }
 
 provider "kubernetes" {
-  config_path = "~/.kube/config"
-  config_context = "lab-aks" 
+  config_path    = "~/.kube/config"
+  config_context = "lab-aks"
 }

@@ -11,19 +11,19 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         git \
     && rm -rf /var/lib/apt/lists/*
 
-# ── Non-root user (good practice; installers default to $HOME) ──
-RUN useradd -ms /bin/bash ligma
-USER ligma
-WORKDIR /home/ligma
+WORKDIR /root
 
 # ── PATH (needed before installers run) ────────────────────────
-ENV PATH="/home/ligma/.local/bin:${PATH}"
+ENV PATH="/root/.local/bin:${PATH}"
 
 # ── Install LiteLLM ────────────────────────────────────────────
 RUN pip install --no-cache-dir litellm[proxy]
 
 # ── Install Claude Code (native binary, no Node.js required) ───
 RUN curl -fsSL https://claude.ai/install.sh | bash
+
+# Install Open Code
+RUN curl -fsSL https://opencode.ai/install | bash
 
 # ── Runtime environment variables ──────────────────────────────
 # LiteLLM will proxy requests; Claude Code talks to it locally.
@@ -36,7 +36,7 @@ ENV ANTHROPIC_API_KEY="local-dev-key"
 ENV OPENROUTER_API_KEY=""
 
 # ── LiteLLM config ─────────────────────────────────────────────
-COPY --chown=ligma:ligma config.yaml /home/ligma/config.yaml
+COPY config.yaml /root/config.yaml
 
 # ── Expose LiteLLM proxy port ───────────────────────────────────
 EXPOSE 4000
@@ -44,4 +44,4 @@ EXPOSE 4000
 # ── Entrypoint ─────────────────────────────────────────────────
 # Starts LiteLLM proxy in the background, then drops into bash.
 # Override CMD for headless / CI use.
-CMD ["bash", "-c", "litellm --config /home/ligma/config.yaml --port 4000 > /tmp/litellm.log 2>&1 & exec bash"]
+CMD ["bash", "-c", "litellm --config /root/config.yaml --port 4000 > /tmp/litellm.log 2>&1 & exec bash"]

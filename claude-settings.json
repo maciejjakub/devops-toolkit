@@ -1,0 +1,53 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Read(**/secrets/**)",
+      "Read(~/.ssh/**)",
+      "Read(~/.aws/**)",
+      "Read(~/.azure/**)",
+      "Read(~/.kube/config)",
+      "Edit(/etc/**)",
+      "Edit(/private/etc/**)",
+      "Edit(/usr/**)",
+      "Edit(/bin/**)",
+      "Edit(/sbin/**)",
+      "Edit(/var/**)",
+      "Edit(/private/var/**)",
+      "Edit(/System/**)",
+      "Edit(/Library/**)",
+      "Edit(~/.ssh/**)",
+      "Edit(~/.aws/**)",
+      "Edit(~/.azure/**)",
+      "Edit(~/.kube/**)",
+      "Edit(~/.gnupg/**)",
+      "Edit(~/.config/gcloud/**)",
+      "Edit(**/.env)",
+      "Edit(**/.env.*)",
+      "Edit(**/secrets/**)",
+      "Edit(**/*.pem)",
+      "Edit(**/id_rsa)",
+      "Edit(**/id_ed25519)"
+    ],
+    "ask": [
+      "Bash(sudo *)",
+      "Bash(rm -rf /*)",
+      "Bash(rm -rf ~*)",
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(git reset --hard*)",
+      "WebFetch"
+    ],
+    "defaultMode": "acceptEdits"
+  },
+  "model": "opus",
+  "effortLevel": "high",
+  "theme": "auto",
+  "agentPushNotifEnabled": true
+}
